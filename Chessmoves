@@ -1,0 +1,218 @@
+chess_board=[['r','h',' ','q','k',' ',' ','r'],          #  A   B   C   D   E   F   G   H
+             [' ','b',' ','p',' ','p',' ','p'],          # 8
+             [' ',' ','p','b',' ','h',' ',' '],          # 7
+             ['p',' ',' ',' ','p',' ',' ',' '],          # 6
+             [' ',' ',' ','P',' ',' ',' ',' '],          # 5
+             [' ','P','H','Q',' ','H',' ',' '],          # 4
+             ['P',' ','P',' ','P',' ','P',' '],          # 3
+             ['R',' ','B',' ','K','B',' ','R']]          # 2         #allignment of board
+                                                         # 1
+
+def converted_coordinates(moves):
+    moves1=[]
+    for each in moves:
+        row=each[0][0]
+        column=each[0][1]
+        new_row=each[1][0]
+        new_column=each[1][1]
+        moves1.append((((chr(column+65),8-row),(chr(new_column+65),8-new_row))))
+        #moves1.append((((chr(row+65),column+1),(chr(new_row+65),new_column+1))))
+    return moves1
+
+def move_pawn(chess_board, player, position):                 #definition for mones of pawns developed with all conditions manually
+    moves=[]
+    row=position[0]
+    column=position[1]
+    if player==1:
+        if (row+1>=0 and row+1 <8 and column>=0 and column<8) and chess_board[row+1][column]==' ':
+            moves.append(((row,column),(row+1,column)))
+            if (row+2>=0 and row+2 <8 and column>=0 and column<8 and row==1) and chess_board[row+2][column]==' ':
+                moves.append(((row,column),(row+2,column)))
+        if (row+1>=0 and row+1 <8 and column-1>=0 and column-1<8) and chess_board[row+1][column-1] in map(chr,range(65,90)):
+            moves.append(((row,column),(row+1,column-1)))
+        if (row+1>=0 and row+1 <8 and column+1>=0 and column+1<8) and chess_board[row+1][column+1] in map(chr,range(65,90)):
+            moves.append(((row,column),(row+1,column+1)))
+    if player==2:
+
+        if (row-1>=0 and row-1 <8 and column>=0 and column<8) and chess_board[row-1][column]==' ':
+            moves.append(((row,column),(row-1,column)))
+            if (row-2>=0 and row-2 <8 and column>=0 and column<8 and row==6) and chess_board[row-2][column]==' ':
+                moves.append(((row,column),(row-2,column)))
+        if (row-1>=0 and row-1 <8 and column-1>=0 and column-1<8) and chess_board[row-1][column-1] in map(chr,range(97,122)):
+            moves.append(((row,column),(row-1,column-1)))
+        if (row-1>=0 and row-1 <8 and column+1>=0 and column+1<8) and chess_board[row-1][column+1] in map(chr,range(97,122)):
+            moves.append(((row,column),(row-1,column+1)))
+    moves1=converted_coordinates(moves)
+    return moves1
+
+def move_king(chess_board, player, position):                               #Using relative positions
+    possible_directions=[(1,0),(1,1),(1,-1),(0,1),(0,-1),(-1,0),(-1,1),(-1,-1)]
+    moves=[]
+    row=position[0]
+    column=position[1]
+    for each in possible_directions:
+        dx=each[0]
+        dy=each[1]
+        new_row=row+dx
+        new_column=column+dy
+        out_bound_condition=(new_row>=0 and new_row <8 and new_column>=0 and new_column<8)
+        if player==1:
+            if out_bound_condition and (chess_board[new_row][new_column]==' ' or chess_board[new_row][new_column] in map(chr,range(65,90))):
+                moves.append(((row,column),(new_row,new_column)))
+        elif player==2:
+            if out_bound_condition and (chess_board[new_row][new_column]==' ' or chess_board[new_row][new_column] in map(chr,range(97,122))):
+                moves.append(((row,column),(new_row,new_column)))
+    moves1=converted_coordinates(moves)
+    return moves1
+
+def move_knight(chess_board, player, position):
+    possible_directions=[(2,1),(2,-1),(-2,-1),(-2,1),(1,-2),(1,2),(-1,2),(-1,-2)]
+    moves=[]
+    row=position[0]
+    column=position[1]
+    for each in possible_directions:
+        dx=each[0]
+        dy=each[1]
+        new_row=row+dx
+        new_column=column+dy
+        out_bound_condition=(new_row>=0 and new_row <8 and new_column>=0 and new_column<8)
+        if player==1:
+            if out_bound_condition and (chess_board[new_row][new_column]==' ' or chess_board[new_row][new_column] in map(chr,range(65,90))):
+                moves.append(((row,column),(new_row,new_column)))
+        elif player==2:
+            if out_bound_condition and (chess_board[new_row][new_column]==' ' or chess_board[new_row][new_column] in map(chr,range(97,122))):
+                moves.append(((row,column),(new_row,new_column)))
+    moves1=converted_coordinates(moves)
+    return moves1
+
+def move_Rooks(chess_board, player, position):
+    possible_directions=[(0,1),(0,-1),(1,0),(-1,0)]
+    moves=[]
+    row=position[0]
+    column=position[1]
+    for each in possible_directions:
+        dx=each[0]
+        dy=each[1]
+        new_row=row+dx
+        new_column=column+dy
+        out_bound_condition=(new_row>=0 and new_row <8 and new_column>=0 and new_column<8)
+        while (new_row>=0 and new_row <8 and new_column>=0 and new_column<8):
+            if player==1:
+                if out_bound_condition and (chess_board[new_row][new_column]==' ' or chess_board[new_row][new_column] in map(chr,range(65,90))):
+                    moves.append(((row,column),(new_row,new_column)))
+            elif player==2:
+                if out_bound_condition and (chess_board[new_row][new_column]==' ' or chess_board[new_row][new_column] in map(chr,range(97,122))):
+                    moves.append(((row,column),(new_row,new_column)))
+            if chess_board[new_row][new_column] in map(chr,range(65,122)):
+                new_row=8
+                new_column=8
+                break
+            new_row=new_row+dx
+            new_column=new_column+dy
+    moves1=converted_coordinates(moves)
+    return moves1
+
+def move_Bishops(chess_board, player, position):
+    possible_directions=[(1,1),(1,-1),(-1,1),(-1,-1)]
+    moves=[]
+    row=position[0]
+    column=position[1]
+    for each in possible_directions:
+        dx=each[0]
+        dy=each[1]
+        new_row=row+dx
+        new_column=column+dy
+        out_bound_condition=(new_row>=0 and new_row <8 and new_column>=0 and new_column<8)
+        while (new_row>=0 and new_row <8 and new_column>=0 and new_column<8):
+            if player==1:
+                if out_bound_condition and (chess_board[new_row][new_column]==' ' or chess_board[new_row][new_column] in map(chr,range(65,90))):
+                    moves.append(((row,column),(new_row,new_column)))
+            elif player==2:
+                if out_bound_condition and (chess_board[new_row][new_column]==' ' or chess_board[new_row][new_column] in map(chr,range(97,122))):
+                    moves.append(((row,column),(new_row,new_column)))
+            if chess_board[new_row][new_column] in map(chr,range(65,122)):
+                new_row=8
+                new_column=8
+                break
+            new_row=new_row+dx
+            new_column=new_column+dy
+    moves1=converted_coordinates(moves)
+    return moves1
+
+def move_Queen(chess_board, player, position):
+    possible_directions=[(1,1),(1,-1),(-1,1),(-1,-1),(0,1),(0,-1),(1,0),(-1,0)]
+    moves=[]
+    row=position[0]
+    column=position[1]
+    for each in possible_directions:
+        dx=each[0]
+        dy=each[1]
+        new_row=row+dx
+        new_column=column+dy
+        out_bound_condition=(new_row>=0 and new_row <8 and new_column>=0 and new_column<8)
+        while (new_row>=0 and new_row <8 and new_column>=0 and new_column<8):
+            if player==1:
+                if out_bound_condition and (chess_board[new_row][new_column]==' ' or chess_board[new_row][new_column] in map(chr,range(65,90))):
+                    moves.append(((row,column),(new_row,new_column)))
+            elif player==2:
+                if out_bound_condition and (chess_board[new_row][new_column]==' ' or chess_board[new_row][new_column] in map(chr,range(97,122))):
+                    moves.append(((row,column),(new_row,new_column)))
+            if chess_board[new_row][new_column] in map(chr,range(65,122)):
+                new_row=8
+                new_column=8
+                break
+            new_row=new_row+dx
+            new_column=new_column+dy
+    moves1=converted_coordinates(moves)
+    return moves1
+
+def moves_function(char):
+    if char=='p' or char=='P':
+        return move_pawn
+    elif char=='k' or char=='K':
+        return move_king
+    elif char=='r' or char=='R':
+        return move_Rooks
+    elif char=='h' or char=='H':
+        return move_knight
+    elif char=='q' or char=="Q":
+        return move_Queen
+    elif char=='b' or char=="B":
+        return move_Bishops
+
+def player_pieces(chess_board,turn):
+    for row in range(0,8):
+        for column in range(0,8):
+            out_bound_condition=(row>=0 and row <8 and column>=0 and column<8)
+            if turn==1:
+                if out_bound_condition and chess_board[row][column] in map(chr,range(97,122)):
+                     yield ((chess_board[row][column],(row,column)))
+            elif turn==2:
+                if out_bound_condition and chess_board[row][column] in map(chr,range(65,90)):
+                    yield ((chess_board[row][column],(row,column)))
+
+def possible_moves(chess_board,turn):
+    moves_player=[]
+    for each in player_pieces(chess_board,turn):
+        x=moves_function
+        y=x(each[0])
+        moves_player=(y(chess_board,turn,each[1]))
+        yield each[0],moves_player
+
+solution_player1=possible_moves(chess_board,1)
+print("player 1 chances")
+for each in solution_player1:
+    for each1 in each[1]:
+        print("%s%d to %s%d"%(each1[0][0],each1[0][1],each1[1][0],each1[1][1]))
+solution_player2=possible_moves(chess_board,2)
+print("player 2 chances")
+for each in solution_player2:
+    for each1 in each[1]:
+        print("%s%d to %s%d"%(each1[0][0],each1[0][1],each1[1][0],each1[1][1]))
+
+
+'''for each in solution_player1:
+    print(each[0],each[1])'''
+'''solution_player2=possible_moves(chess_board,2)
+for each in solution_player2:
+    print(each[0],each[1])'''
